@@ -10,17 +10,14 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.time.Duration
-import java.time.LocalDate
-import java.time.Period
-import java.time.ZoneId
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 @Component
 class HealthCheckConsumer(@Value("\${topic.healthcheck}") private val healthcheckTopic: String,
-                          @Value("\${topic.uptime}") private val uptimeTopic: String,
                           private val klaxon: Klaxon,
-                          private val consumer: KafkaConsumer<String, String>) {
+                          private val consumer: KafkaConsumer<String, String>,
+                          private val reporter: UptimeReporter) {
 
     private val log = LoggerFactory.getLogger(HealthCheckConsumer::class.java)
     private val executor = Executors.newSingleThreadExecutor()
@@ -37,9 +34,7 @@ class HealthCheckConsumer(@Value("\${topic.healthcheck}") private val healthchec
     fun transformRecords(record: ConsumerRecord<String, String>) {
         catchLog(log) {
             val healthcheck = klaxon.parse<HealthCheck>(record.value())!!
-            val startedAt = healthcheck.lastStartedAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-            val uptime = Period.between(startedAt, LocalDate.now())
-            log.info("${healthcheck.serial}: $uptime")
+            reporter.reportHealthcheck(healthcheck)
         }
     }
 }
