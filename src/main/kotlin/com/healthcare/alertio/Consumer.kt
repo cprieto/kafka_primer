@@ -6,6 +6,7 @@ import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.Consumed
+import org.apache.kafka.streams.kstream.Produced
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -16,23 +17,24 @@ import java.time.LocalDate
 import java.time.Period
 import java.time.ZoneId
 import java.util.*
-import org.apache.kafka.streams.kstream.KeyValueMapper
-import org.apache.kafka.streams.kstream.Produced
-import org.apache.kafka.streams.kstream.KStream
-
-
 
 
 @Component
 class HealthCheckConsumer(@Value("\${topic.healthcheck}") private val healthcheckTopic: String,
                           @Value("\${topic.uptime}") private val uptimeTopic: String,
-                          private val klaxon: Klaxon) {
+                          private val klaxon: Klaxon,
+                          private val streamsBuilder: StreamsBuilder) {
 
     private val log = LoggerFactory.getLogger(HealthCheckConsumer::class.java)
 
+    @Value("\${bootstrap.servers}")
+    lateinit var servers: String
+
+    @Value("\${application.id}")
+    lateinit var applicationId: String
+
     fun run() {
         log.info("Transforming healthcheck records")
-        val streamsBuilder = StreamsBuilder()
         val healthCheckStream = streamsBuilder.stream(
                 healthcheckTopic, Consumed.with(Serdes.String(), Serdes.String()))
 
@@ -44,11 +46,12 @@ class HealthCheckConsumer(@Value("\${topic.healthcheck}") private val healthchec
         output.to(uptimeTopic, Produced.with(Serdes.String(), Serdes.String()))
 
         val topology = streamsBuilder.build()
-        val properties = Properties()
-        properties["bootstrap.servers"] = "localhost:9092"
-        properties["application.id"] = "kioto"
-        val streams = KafkaStreams(topology, properties)
 
+        val properties = Properties()
+        properties["bootstrap.servers"] = servers
+        properties["application.id"] = applicationId
+
+        val streams = KafkaStreams(topology, properties)
         streams.start()
     }
 }

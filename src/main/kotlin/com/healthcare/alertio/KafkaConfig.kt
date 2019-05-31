@@ -13,6 +13,9 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.event.ContextRefreshedEvent
+import org.springframework.context.event.EventListener
+import org.springframework.stereotype.Component
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -39,9 +42,6 @@ class KafkaConfigurator {
     @Value("\${bootstrap.servers}")
     lateinit var servers: String
 
-    @Value("\${group.id}")
-    lateinit var groupId: String
-
     @Bean
     fun kafkaProducer(): KafkaProducer<String, String> {
         val properties = Properties()
@@ -53,5 +53,18 @@ class KafkaConfigurator {
     }
 
     @Bean
+    fun streamsBuilder() = StreamsBuilder()
+
+    @Bean
     fun klaxon(): Klaxon = Klaxon().fieldConverter(KlaxonDate::class, dateConverter)
+}
+
+@Component
+class KafkaTopicStarter(private val streamsBuilder: StreamsBuilder) {
+
+
+    @EventListener(ContextRefreshedEvent::class)
+    fun start() {
+
+    }
 }
