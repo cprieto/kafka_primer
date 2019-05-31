@@ -8,6 +8,8 @@ import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
+import org.apache.kafka.streams.KafkaStreams
+import org.apache.kafka.streams.StreamsBuilder
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -48,17 +50,6 @@ class KafkaConfigurator {
         properties["value.serializer"] = StringSerializer::class.java
 
         return KafkaProducer(properties)
-    }
-
-    @Bean
-    fun kafkaConsumer(): KafkaConsumer<String, String> {
-        val properties = Properties()
-        properties["bootstrap.servers"] = servers
-        properties["key.deserializer"] = StringDeserializer::class.java
-        properties["value.deserializer"] = StringDeserializer::class.java
-        properties["group.id"] = groupId
-
-        return KafkaConsumer(properties)
     }
 
     @Bean

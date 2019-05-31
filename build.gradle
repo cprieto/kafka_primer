@@ -17,5 +17,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'com.github.javafaker:javafaker:0.18'
     implementation 'com.beust:klaxon:5.0.2'
-    implementation 'org.apache.kafka:kafka_2.12:2.2.0'
+    implementation 'org.apache.kafka:kafka_2.12:2.0.1'
+    implementation 'org.apache.kafka:kafka-streams:2.0.1'
 }
