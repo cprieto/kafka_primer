@@ -63,9 +63,10 @@ fun Date.uptime(): Period {
 
 @Component
 @Order(value = 2)
-class HeathCheckConsumerCommandRunner(private val consumer: HealthCheckConsumer): CommandLineRunner {
+class HeathCheckConsumerRunner(private val consumer: HealthCheckConsumer): CommandLineRunner {
     override fun run(vararg args: String?) {
-        consumer.run()
+        val opts = CmdLineParser.parse(options, args)
+        if(opts.hasOption("all") || opts.hasOption("uptimes")) consumer.run()
     }
 }
 

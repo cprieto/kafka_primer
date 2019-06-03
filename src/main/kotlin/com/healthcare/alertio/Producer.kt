@@ -16,6 +16,8 @@ import java.util.concurrent.TimeUnit
 @Order(value = 1)
 class ProducerCommandRunner(private val producer: PlainTextProducer): CommandLineRunner {
     override fun run(vararg args: String?) {
+        val opts = CmdLineParser.parse(options, args)
+        if(opts.hasOption("all") || opts.hasOption("healthcheck")) producer.run()
         producer.run()
     }
 }
