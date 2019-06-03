@@ -6,6 +6,7 @@ Because there are different ways to skin this thing, I used different methods to
 
   - *v1.0* Using classic consumer/producer directly with Kafka
   - *v1.1* Using Kafka Streams directly (this is when shit starts to get awesome)
+  - *v1.2* Using windowed functions and handling late events
 
 You can check the corresponding release and tag and see the difference in code
 
