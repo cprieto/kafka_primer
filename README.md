@@ -9,3 +9,4 @@ Because there are different ways to skin this thing, I used different methods to
 
 You can check the corresponding release and tag and see the difference in code
 
+You need to have Kafka somewhere, you could use Confluent Kafka options, just remember if using the container it will need 8GB of memspace to run (you can blame Zookeeper)
