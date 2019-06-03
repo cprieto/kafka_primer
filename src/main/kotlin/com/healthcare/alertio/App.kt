@@ -12,6 +12,7 @@ val options = Options()
         .addOption("all", "Run all runners")
         .addOption("healthcheck", "Run only Healthcheck producer")
         .addOption("uptimes", "Run only Uptimes consumer")
+        .addOption("events", "Run events producer and consumer")
 
 val CmdLineParser = DefaultParser()
 

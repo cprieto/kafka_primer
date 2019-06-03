@@ -45,14 +45,7 @@ class HealthCheckConsumer(@Value("\${topic.healthcheck}") private val healthchec
 
         output.to(uptimeTopic, Produced.with(Serdes.String(), Serdes.String()))
 
-        val topology = streamsBuilder.build()
 
-        val properties = Properties()
-        properties["bootstrap.servers"] = servers
-        properties["application.id"] = applicationId
-
-        val streams = KafkaStreams(topology, properties)
-        streams.start()
     }
 }
 

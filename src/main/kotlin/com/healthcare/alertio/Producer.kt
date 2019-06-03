@@ -18,7 +18,6 @@ class ProducerCommandRunner(private val producer: PlainTextProducer): CommandLin
     override fun run(vararg args: String?) {
         val opts = CmdLineParser.parse(options, args)
         if(opts.hasOption("all") || opts.hasOption("healthcheck")) producer.run()
-        producer.run()
     }
 }
 
